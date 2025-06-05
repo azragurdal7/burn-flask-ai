@@ -318,3 +318,7 @@ def load_models_before_request():
         print("⏳ İlk istek alındı, modeller yükleniyor...")
         load_ai_models()
         models_loaded = True
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))  # Render ortamı için dinlenecek port
+    app.run(host="0.0.0.0", port=port, debug=True)
