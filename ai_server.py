@@ -38,30 +38,33 @@ class_labels_depth = ["Birinci Derece Yanık", "İkinci Derece Yüzeysel Yanık"
 def load_ai_models():
     global depth_model, segmentation_model
 
-    # Derinlik Modelini Yükle
+    # Derinlik Modelini S3'ten indir
     try:
         depth_model_path = os.path.join(SCRIPT_DIR, "best_model.h5")
+        if not os.path.exists(depth_model_path):
+            download_model_from_s3("burnai-models", "best_model.h5", depth_model_path)
         if os.path.exists(depth_model_path):
             depth_model = tf.keras.models.load_model(depth_model_path, compile=False)
-            print(f"Derinlik modeli '{depth_model_path}' başarıyla yüklendi.")
+            print(f"✅ Derinlik modeli '{depth_model_path}' başarıyla yüklendi.")
         else:
-            print(f"HATA: Derinlik modeli bulunamadı: {depth_model_path}")
+            print(f"❌ Derinlik modeli bulunamadı: {depth_model_path}")
     except Exception as e:
-        print(f"Derinlik modeli yüklenirken hata: {e}")
+        print(f"❌ Derinlik modeli yüklenirken hata: {e}")
         traceback.print_exc()
 
-    # Segmentasyon Modelini Yükle
+    # Segmentasyon Modelini S3'ten indir
     try:
-        # ÖNEMLİ: Kendi segmentasyon modelinizin dosya adını buraya doğru girin!
-        segmentation_model_filename = "segmentation_model.h5" # GERÇEK MODEL ADINIZI YAZIN
+        segmentation_model_filename = "segmentation_model.h5"
         segmentation_model_path = os.path.join(SCRIPT_DIR, segmentation_model_filename)
+        if not os.path.exists(segmentation_model_path):
+            download_model_from_s3("burnai-models", "segmentation_model.h5", segmentation_model_path)
         if os.path.exists(segmentation_model_path):
             segmentation_model = tf.keras.models.load_model(segmentation_model_path, compile=False)
-            print(f"Segmentasyon modeli '{segmentation_model_path}' başarıyla yüklendi.")
+            print(f"✅ Segmentasyon modeli '{segmentation_model_path}' başarıyla yüklendi.")
         else:
-            print(f"HATA: Segmentasyon modeli bulunamadı: {segmentation_model_path}")
+            print(f"❌ Segmentasyon modeli bulunamadı: {segmentation_model_path}")
     except Exception as e:
-        print(f"Segmentasyon modeli '{segmentation_model_path}' yüklenirken hata: {e}")
+        print(f"❌ Segmentasyon modeli yüklenirken hata: {e}")
         traceback.print_exc()
 
 # Resimden DPI bilgisini okuma fonksiyonu
