@@ -308,6 +308,10 @@ def predict_route():
     })
 
 # Uygulama başlangıcında modelleri yükle
-if __name__ == "__main__":
+# İlk HTTP isteğinden hemen önce modelleri yükle
+@app.before_first_request
+def load_models_once():
     load_ai_models()
-    app.run(host="0.0.0.0", port=5000, debug=True) # Geliştirme için debug=True
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=True)
