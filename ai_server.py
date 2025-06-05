@@ -59,7 +59,7 @@ def load_ai_models():
         if not os.path.exists(segmentation_model_path):
             download_model_from_s3("burnai-models", "segmentation_model.h5", segmentation_model_path)
         if os.path.exists(segmentation_model_path):
-            segmentation_model = tf.keras.models.load_model(segmentation_model_path, compile=False)
+            #segmentation_model = tf.keras.models.load_model(segmentation_model_path, compile=False)
             print(f"✅ Segmentasyon modeli '{segmentation_model_path}' başarıyla yüklendi.")
         else:
             print(f"❌ Segmentasyon modeli bulunamadı: {segmentation_model_path}")
