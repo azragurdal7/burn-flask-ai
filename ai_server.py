@@ -309,9 +309,12 @@ def predict_route():
 
 # Uygulama başlangıcında modelleri yükle
 # İlk HTTP isteğinden hemen önce modelleri yükle
-@app.before_first_request
-def load_models_once():
-    load_ai_models()
+models_loaded = False
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+@app.before_request
+def load_models_before_request():
+    global models_loaded
+    if not models_loaded:
+        print("⏳ İlk istek alındı, modeller yükleniyor...")
+        load_ai_models()
+        models_loaded = True
