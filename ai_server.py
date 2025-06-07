@@ -59,7 +59,7 @@ def load_ai_models():
         if not os.path.exists(segmentation_model_path):
             download_model_from_s3("burnai-models", "segmentation_model.h5", segmentation_model_path)
         if os.path.exists(segmentation_model_path):
-            #segmentation_model = tf.keras.models.load_model(segmentation_model_path, compile=False)
+            segmentation_model = tf.keras.models.load_model(segmentation_model_path, compile=False)
             print(f"✅ Segmentasyon modeli '{segmentation_model_path}' başarıyla yüklendi.")
         else:
             print(f"❌ Segmentasyon modeli bulunamadı: {segmentation_model_path}")
@@ -310,8 +310,14 @@ def predict_route():
 # Uygulama başlangıcında modelleri yükle
 # İlk HTTP isteğinden hemen önce modelleri yükle
 
+# Ana sayfa kontrolü (Railway 404 hatası çözümü)
+@app.route("/", methods=["GET"])
+def index():
+    return "✅ Flask AI API is running!", 200
+
+# Uygulama başlangıcında modelleri yükle
 if __name__ == "__main__":
     print("🚀 Sunucu başlatılıyor, modeller yükleniyor...")
     load_ai_models()  # Başta yükle
-    port = int(os.environ.get("PORT", 5000))  # Render için port
+    port = int(os.environ.get("PORT", 5000))  # Render/Railway için port
     app.run(host="0.0.0.0", port=port, debug=False)
